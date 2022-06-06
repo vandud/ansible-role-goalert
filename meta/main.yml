@@ -1,4 +1,5 @@
 galaxy_info:
+  role_name: goalert
   author: vandud
   description: Role for installing GoAlert
   license: BSD
