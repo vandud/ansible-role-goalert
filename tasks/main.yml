@@ -56,3 +56,9 @@
     group: root
     mode: 0644
   notify: Restart goalert service
+
+- name: Ensure GoAlert service is running as configured.
+  service:
+    name: goalert
+    state: "{{ goalert_service_state }}"
+    enabled: "{{ goalert_service_enabled }}"

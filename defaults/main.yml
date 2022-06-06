@@ -4,5 +4,8 @@ goalert_download_url: "{{ goalert_repo_url }}/releases/download/{{ goalert_versi
 goalert_version: "v0.29.0"
 goalert_system_user: "goalert"
 goalert_system_group: "goalert"
+goalert_service_state: started
+goalert_service_enabled: true
 goalert_dburl: "postgres://goalert@localhost/goalert"
 goalert_args: ""
+
