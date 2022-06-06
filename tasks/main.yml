@@ -1,0 +1,58 @@
+---
+
+- name: Check if GoAlert is installed
+  stat:
+    path: /usr/local/bin/goalert
+  changed_when: false
+  check_mode: false
+  register: goalert_is_installed
+
+- name: Check current GoAlert version
+  command: /usr/local/bin/goalert version | awk '/^Version:/{print $2}'
+  changed_when: false
+  failed_when: false
+  check_mode: false
+  register: goalert_current_version
+  when:
+    - goalert_is_installed.stat.exists == True
+
+- name: Create GoAlert system group
+  group:
+    name: "{{ goalert_system_group }}"
+    state: present
+    system: true
+  when: goalert_system_group != "root"
+
+- name: Create GoAlert system user
+  user:
+    name: "{{ goalert_system_user }}"
+    groups: "{{ goalert_system_group }}"
+    append: true
+    shell: /sbin/nologin
+    system: true
+    createhome: false
+  when: goalert_system_user != "root"
+
+- name: Download GoAlert from {{ goalert_download_url }}
+  unarchive:
+    src: "{{ goalert_download_url }}"
+    dest: "/usr/local/bin"
+    extra_opts:
+      - '--strip-components'
+      - '3'
+    owner: "{{ goalert_system_user }}"
+    group: "{{ goalert_system_group }}"
+    remote_src: True
+  when:
+    - not ansible_check_mode
+    - goalert_is_installed.stat.exists == False or
+      goalert_version not in goalert_current_version.stdout
+
+- name: Create systemd unit file for GoAlert
+  template:
+    src: goalert.service.j2
+    dest: /etc/systemd/system/goalert.service
+    owner: root
+    group: root
+    mode: 0644
+  notify: Restart goalert service

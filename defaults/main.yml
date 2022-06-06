@@ -1,0 +1,8 @@
+---
+goalert_repo_url: "https://github.com/target/goalert"
+goalert_download_url: "{{ goalert_repo_url }}/releases/download/{{ goalert_version }}/goalert-linux-amd64.tgz"
+goalert_version: "v0.29.0"
+goalert_system_user: "goalert"
+goalert_system_group: "goalert"
+goalert_dburl: "postgres://goalert@localhost/goalert"
+goalert_args: ""

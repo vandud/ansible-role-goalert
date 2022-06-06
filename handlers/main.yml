@@ -1,0 +1,6 @@
+---
+- name: Restart goalert service
+  systemd:
+    daemon_reload: true
+    name: goalert
+    state: restarted
